@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:we_chat/firebase_options.dart';
 import 'package:we_chat/screens/auth/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 //global object for accessing device screen size.
 late Size mq;
 void main() {
+  _initializFirebase();
   runApp(const MyApp());
 }
 
@@ -33,4 +37,11 @@ class MyApp extends StatelessWidget {
       ),    
     );
   }
+}
+
+_initializFirebase() async {
+  
+await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
 }

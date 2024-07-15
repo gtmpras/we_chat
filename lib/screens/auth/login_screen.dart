@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
+import 'package:we_chat/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,8 +11,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _isAnimate = false;
+
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {
+        _isAnimate = true;
+      });
+    });
+  }
+
   Widget build(BuildContext context) {
+    //initializing media query
     mq = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -21,10 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Stack(
         children: [
-          Positioned(
+          AnimatedPositioned(
               top: mq.height * .15,
-              left: mq.width * .25,
+              right: _isAnimate ? mq.width * .25 : -mq.width * .5,
               width: mq.width * .5,
+              duration: Duration(seconds: 1),
               child: Image.asset('images/conversation.png')),
           Positioned(
               top: mq.height * .6,
@@ -32,7 +46,10 @@ class _LoginScreenState extends State<LoginScreen> {
               width: mq.width * .8,
               height: mq.height * .05,
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 203, 233, 170),
                     shape: StadiumBorder(),
@@ -41,12 +58,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: TextSpan(
                         style: TextStyle(color: Colors.black, fontSize: 17),
                         children: [
-                      TextSpan(text: "Sign In with"),
+                      TextSpan(text: "Login with"),
                       TextSpan(
                           text: " Google",
                           style: TextStyle(fontWeight: FontWeight.bold))
                     ])),
-                icon: Image.asset('images/search.png',height:mq.height*.03,),
+                icon: Image.asset(
+                  'images/search.png',
+                  height: mq.height * .03,
+                ),
               )),
         ],
       ),

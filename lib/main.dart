@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:we_chat/screens/home_screen.dart';
+import 'package:we_chat/screens/auth/login_screen.dart';
 
+//global object for accessing device screen size.
+late Size mq;
 void main() {
   runApp(const MyApp());
 }
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'We Chat',
-      home: HomeScreen(),
+      home: LoginScreen(),
       theme: ThemeData(
         iconTheme: IconThemeData(
           color: Colors.black,

@@ -1,16 +1,21 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_chat/firebase_options.dart';
-import 'package:we_chat/screens/auth/login_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_core/firebase_core.dart';
+import 'package:we_chat/screens/splash_screen.dart';
 import 'firebase_options.dart';
-
 //global object for accessing device screen size.
 late Size mq;
-void main() {
-  _initializFirebase();
+// void main()async {
+
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+//   runApp(const MyApp());
+// }
+
+void main(){
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'We Chat',
-      home: LoginScreen(),
+      home: SplashScreen(),
       theme: ThemeData(
         iconTheme: IconThemeData(
           color: Colors.black,
@@ -37,11 +42,4 @@ class MyApp extends StatelessWidget {
       ),    
     );
   }
-}
-
-_initializFirebase() async {
-  
-await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-);
 }

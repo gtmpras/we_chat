@@ -4,6 +4,8 @@ import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/home_screen.dart';
 
+import 'auth/login_screen.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -16,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.push(context,MaterialPageRoute(builder: (_)=>HomeScreen()));
+      Navigator.push(context,MaterialPageRoute(builder: (_)=>LoginScreen()));
     });
   }
 

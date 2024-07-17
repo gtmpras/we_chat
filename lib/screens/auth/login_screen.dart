@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/home_screen.dart';
-
+import 'dart:developer' as developer;
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -22,6 +24,47 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     });
   }
+
+  // _handleGoogleBtnClick(){
+  //   _signInWithGoogle().then((user){
+  //     print('\nUser: ${user.user}');
+  //     print('\nUserAdditionalInfo: ${user.additionalUserInfo}');
+  //       Navigator.pushReplacement(
+  //                     context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                
+  //   });
+
+  // }
+    // Import dart:developer
+
+_handleGoogleBtnClick() {
+  _signInWithGoogle().then((user) {
+    developer.log('User: ${user.user}');  // Using log instead of print
+    developer.log('UserAdditionalInfo: ${user.additionalUserInfo}');
+    
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => HomeScreen()),
+    );
+  });
+}
+
+  Future<UserCredential> _signInWithGoogle() async {
+  // Trigger the authentication flow
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+  // Create a new credential
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
+  );
+
+  // Once signed in, return the UserCredential
+  return await FirebaseAuth.instance.signInWithCredential(credential);
+}
 
   Widget build(BuildContext context) {
     //initializing media query
@@ -47,8 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: mq.height * .05,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                  _handleGoogleBtnClick();
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 203, 233, 170),

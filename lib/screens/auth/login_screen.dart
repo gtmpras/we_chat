@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -5,6 +8,7 @@ import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/home_screen.dart';
 import 'dart:developer' as developer;
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -25,23 +29,23 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  _handleGoogleBtnClick(){
-    _signInWithGoogle().then((user){
-      print('\nUser: ${user.user}');
-      print('\nUserAdditionalInfo: ${user.additionalUserInfo}');
+  _handleGoogleBtnClick() {
+    _signInWithGoogle().then((user) {
+      if (user != null) {
+        print('\nUser: ${user.user}');
+        print('\nUserAdditionalInfo: ${user.additionalUserInfo}');
         Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (_) => HomeScreen()));
-                
+            context, MaterialPageRoute(builder: (_) => HomeScreen()));
+      }
     });
-
   }
-    // Import dart:developer
+  // Import dart:developer
 
 // _handleGoogleBtnClick() {
 //   _signInWithGoogle().then((user) {
 //     developer.log('User: ${user.user}');  // Using log instead of print
 //     developer.log('UserAdditionalInfo: ${user.additionalUserInfo}');
-    
+
 //     Navigator.pushReplacement(
 //       context,
 //       MaterialPageRoute(builder: (_) => HomeScreen()),
@@ -49,28 +53,28 @@ class _LoginScreenState extends State<LoginScreen> {
 //   });
 // }
 
-  Future<UserCredential> _signInWithGoogle() async {
-  // Trigger the authentication flow
-  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future<UserCredential?> _signInWithGoogle() async {
+    try {
+      await InternetAddress.lookup('google.com');
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  // Obtain the auth details from the request
-  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-  // Create a new credential
-  final credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth?.accessToken,
-    idToken: googleAuth?.idToken,
-  );
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-  // Once signed in, return the UserCredential
-  return await FirebaseAuth.instance.signInWithCredential(credential);
-}
-
-//signout function
-_signOut()async{
-  await FirebaseAuth.instance.signOut();
-  await GoogleSignIn().signOut();
-}
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      print('_signInWithGoogle: $e');
+    }
+  }
 
   Widget build(BuildContext context) {
     //initializing media query

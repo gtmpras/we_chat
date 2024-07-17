@@ -25,29 +25,29 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  // _handleGoogleBtnClick(){
-  //   _signInWithGoogle().then((user){
-  //     print('\nUser: ${user.user}');
-  //     print('\nUserAdditionalInfo: ${user.additionalUserInfo}');
-  //       Navigator.pushReplacement(
-  //                     context, MaterialPageRoute(builder: (_) => HomeScreen()));
+  _handleGoogleBtnClick(){
+    _signInWithGoogle().then((user){
+      print('\nUser: ${user.user}');
+      print('\nUserAdditionalInfo: ${user.additionalUserInfo}');
+        Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (_) => HomeScreen()));
                 
-  //   });
+    });
 
-  // }
+  }
     // Import dart:developer
 
-_handleGoogleBtnClick() {
-  _signInWithGoogle().then((user) {
-    developer.log('User: ${user.user}');  // Using log instead of print
-    developer.log('UserAdditionalInfo: ${user.additionalUserInfo}');
+// _handleGoogleBtnClick() {
+//   _signInWithGoogle().then((user) {
+//     developer.log('User: ${user.user}');  // Using log instead of print
+//     developer.log('UserAdditionalInfo: ${user.additionalUserInfo}');
     
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => HomeScreen()),
-    );
-  });
-}
+//     Navigator.pushReplacement(
+//       context,
+//       MaterialPageRoute(builder: (_) => HomeScreen()),
+//     );
+//   });
+// }
 
   Future<UserCredential> _signInWithGoogle() async {
   // Trigger the authentication flow
@@ -64,6 +64,12 @@ _handleGoogleBtnClick() {
 
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(credential);
+}
+
+//signout function
+_signOut()async{
+  await FirebaseAuth.instance.signOut();
+  await GoogleSignIn().signOut();
 }
 
   Widget build(BuildContext context) {

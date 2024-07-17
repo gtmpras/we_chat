@@ -9,6 +9,8 @@ import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/home_screen.dart';
 import 'dart:developer' as developer;
 
+import 'package:we_chat/utils/dialogs.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -30,6 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _handleGoogleBtnClick() {
+    Dialogs.ShowProgressBar(context);
+    Navigator.pop(context);
     _signInWithGoogle().then((user) {
       if (user != null) {
         print('\nUser: ${user.user}');
@@ -39,19 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     });
   }
-  // Import dart:developer
-
-// _handleGoogleBtnClick() {
-//   _signInWithGoogle().then((user) {
-//     developer.log('User: ${user.user}');  // Using log instead of print
-//     developer.log('UserAdditionalInfo: ${user.additionalUserInfo}');
-
-//     Navigator.pushReplacement(
-//       context,
-//       MaterialPageRoute(builder: (_) => HomeScreen()),
-//     );
-//   });
-// }
 
   Future<UserCredential?> _signInWithGoogle() async {
     try {
@@ -73,6 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
       print('_signInWithGoogle: $e');
+      Dialogs.showSnackbar(context, "Something went wrong Check Internet");
+      return null;
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:we_chat/consts/strings_const.dart';
@@ -18,8 +19,18 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.push(context,MaterialPageRoute(builder: (_)=>LoginScreen()));
-    });
+
+      if(FirebaseAuth.instance.currentUser != null){
+        print('\nUser: ${FirebaseAuth.instance.currentUser}');
+        print('\nUserAdditionalInfo: ${FirebaseAuth.instance.currentUser}');
+Navigator.push(context,MaterialPageRoute(builder: (_)=>HomeScreen()));
+    
+      }else{
+Navigator.push(context,MaterialPageRoute(builder: (_)=>LoginScreen()));
+    
+      }
+
+      });
   }
 
   Widget build(BuildContext context) {

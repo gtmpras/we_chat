@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:we_chat/api/api.dart';
 import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/home_screen.dart';
@@ -19,18 +18,16 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-
-      if(FirebaseAuth.instance.currentUser != null){
-        print('\nUser: ${FirebaseAuth.instance.currentUser}');
-        print('\nUserAdditionalInfo: ${FirebaseAuth.instance.currentUser}');
-Navigator.push(context,MaterialPageRoute(builder: (_)=>HomeScreen()));
-    
-      }else{
-Navigator.push(context,MaterialPageRoute(builder: (_)=>LoginScreen()));
-    
+      if (APIs.auth.currentUser != null) {
+        print('\nUser: ${APIs.auth.currentUser}');
+        print('\nUserAdditionalInfo: ${APIs.auth.currentUser}');
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => HomeScreen()));
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => LoginScreen()));
       }
-
-      });
+    });
   }
 
   Widget build(BuildContext context) {
@@ -46,19 +43,22 @@ Navigator.push(context,MaterialPageRoute(builder: (_)=>LoginScreen()));
         children: [
           AnimatedPositioned(
               top: mq.height * .15,
-              right:mq.width * .25,
+              right: mq.width * .25,
               width: mq.width * .5,
               duration: Duration(seconds: 1),
               child: Image.asset('images/conversation.png')),
           Positioned(
               top: mq.height * .6,
               width: mq.width,
-              child:Text('Created by Prasoon Gautam',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black54,fontSize: 18,
-                letterSpacing: .5,
-              ),)), 
+              child: Text(
+                'Created by Prasoon Gautam',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 18,
+                  letterSpacing: .5,
+                ),
+              )),
         ],
       ),
     );

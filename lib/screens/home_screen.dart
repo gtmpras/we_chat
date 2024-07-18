@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/consts/strings_const.dart';
+import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/auth/login_screen.dart';
+import 'package:we_chat/widgets/chat_user_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -44,6 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
         child: FloatingActionButton(onPressed: (){},
         child: Icon(Icons.add_comment_rounded),),
       ),
+
+      body: ListView.builder(
+        padding: EdgeInsets.only(top: mq.height * .01),
+        itemCount: 18,
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context,index){
+        return ChatUserCard();
+      }),
     );
     
   }

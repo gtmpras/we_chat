@@ -9,6 +9,8 @@ import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/auth/login_screen.dart';
 import 'package:we_chat/widgets/chat_user_card.dart';
 
+import '../models/chat_user_models.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -22,6 +24,9 @@ _signOut()async{
 
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  List<ChatUserModel> list = [];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,27 +55,40 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 //fetching data from cloud firestore firebase.
       body: StreamBuilder(
-        stream: APIs.firestore.collection('users').snapshots(),
+        stream: APIs.firestore.collection('user').snapshots(),
         builder: (context, snapshot){
-          final list = [];
-          if(snapshot.hasData){
+          switch(snapshot.connectionState){
+            //if some time takes exectue this
+            case ConnectionState.waiting:
+            case ConnectionState.none:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+            //if data is loaded then execute this
+          case ConnectionState.active:
+          case ConnectionState.done:
+
+         
             final data = snapshot.data?.docs;
-            for( var i in data!){  
-              //encoding data in proper json format
-            log('Data: ${jsonEncode(i.data())}');
-            list.add(i.data());
-            }
-          }
+            list = data?.map((e)=> ChatUserModel.fromJson(e.data())).toList()??[];
+          
+          if(list.isNotEmpty){
+            
           return ListView.builder(
           padding: EdgeInsets.only(top: mq.height * .01),
           itemCount: list.length,
           physics: BouncingScrollPhysics(),
           itemBuilder: (context,index){
-          return Text('Name: ${list[index]}');
+          return ChatUserCard(user: list[index]);
+          
         });
-        }
+          }else{
+            return 
+            Center(child: Text(emptycolud_store,style:TextStyle(fontSize: 20),));
+          }
+          }
+        }   
       ),
     );
-    
   }
 }

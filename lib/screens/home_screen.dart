@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -47,13 +48,27 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(Icons.add_comment_rounded),),
       ),
 
-      body: ListView.builder(
-        padding: EdgeInsets.only(top: mq.height * .01),
-        itemCount: 18,
-        physics: BouncingScrollPhysics(),
-        itemBuilder: (context,index){
-        return ChatUserCard();
-      }),
+      body: StreamBuilder(
+        stream: APIs.firestore.collection('users').snapshots(),
+        builder: (context, snapshot){
+          final list = [];
+          if(snapshot.hasData){
+            final data = snapshot.data?.docs;
+            for( var i in data!){
+              
+            log('Data: ${i.data()}');
+            list.add(i.data());
+            }
+          }
+          return ListView.builder(
+          padding: EdgeInsets.only(top: mq.height * .01),
+          itemCount: list.length,
+          physics: BouncingScrollPhysics(),
+          itemBuilder: (context,index){
+          return Text('Name: ${list[index]}');
+        });
+        }
+      ),
     );
     
   }

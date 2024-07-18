@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,16 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
         child: FloatingActionButton(onPressed: (){},
         child: Icon(Icons.add_comment_rounded),),
       ),
-
+//fetching data from cloud firestore firebase.
       body: StreamBuilder(
         stream: APIs.firestore.collection('users').snapshots(),
         builder: (context, snapshot){
           final list = [];
           if(snapshot.hasData){
             final data = snapshot.data?.docs;
-            for( var i in data!){
-              
-            log('Data: ${i.data()}');
+            for( var i in data!){  
+              //encoding data in proper json format
+            log('Data: ${jsonEncode(i.data())}');
             list.add(i.data());
             }
           }

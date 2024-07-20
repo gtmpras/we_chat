@@ -6,6 +6,7 @@ import 'package:we_chat/api/api.dart';
 import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/auth/login_screen.dart';
+import 'package:we_chat/utils/dialogs.dart';
 import '../models/chat_user_models.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -33,8 +34,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: FloatingActionButton.extended(
           backgroundColor: Colors.red,
           onPressed: () async {
-            await APIs.auth.signOut();
-            await GoogleSignIn().signOut();
+            Dialogs.ShowProgressBar(context);
+            await APIs.auth.signOut().then((value)async{
+            await GoogleSignIn().signOut().then((value){
+              Navigator.pop(context);
+              //for moving to homeScreen because stack remains empty
+              Navigator.pop(context);
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (_)=>LoginScreen()));
+            });
+
+            });
           },
           icon: Icon(Icons.run_circle_outlined),
           label: Text('Logout'),
@@ -51,17 +61,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: mq.width,
               height: mq.height * .03,
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(mq.height * .1),
-              child: CachedNetworkImage(
-                imageUrl: widget.user.image,
-                width: mq.height * .2,
-                height: mq.height * .2,
-                fit: BoxFit.fill,
-                errorWidget: (context, url, error) => CircleAvatar(
-                  child: Icon(CupertinoIcons.person),
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(mq.height * .1),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.user.image,
+                    width: mq.height * .2,
+                    height: mq.height * .2,
+                    fit: BoxFit.fill,
+                    errorWidget: (context, url, error) => CircleAvatar(
+                      child: Icon(CupertinoIcons.person),
+                    ),
+                  ),
                 ),
-              ),
+
+
+                //edit image button
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: MaterialButton(
+                    elevation: 1,
+                    onPressed: (){
+
+                    },
+                    shape: CircleBorder(),
+                    color: Colors.white,
+                    child: Icon(Icons.edit,color: Colors.blue,),),
+                ),
+              ],
             ),
 
             //for adding some space

@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,12 +5,14 @@ import 'package:we_chat/api/api.dart';
 import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/auth/login_screen.dart';
+import 'package:we_chat/screens/profile_screen.dart';
 import 'package:we_chat/widgets/chat_user_card.dart';
 
 import '../models/chat_user_models.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+  
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -36,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(onPressed: (){}, 
           icon: Icon(Icons.search)),
-          IconButton(onPressed: (){}, 
+          IconButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: list[0])));
+          }, 
           icon: Icon(Icons.more_vert)),
           IconButton(onPressed: (){
             _signOut();
@@ -74,14 +76,16 @@ class _HomeScreenState extends State<HomeScreen> {
           
           if(list.isNotEmpty){
             
-          return ListView.builder(
-          padding: EdgeInsets.only(top: mq.height * .01),
-          itemCount: list.length,
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context,index){
-          return ChatUserCard(user: list[index]);
-          
-        });
+          return Container(
+            child: ListView.builder(
+            padding: EdgeInsets.only(top: mq.height * .01),
+            itemCount: list.length,
+            physics: BouncingScrollPhysics(),
+            itemBuilder: (context,index){
+            return ChatUserCard(user: list[index]);
+            
+                    }),
+          );
           }else{
             return 
             Center(child: Text(emptycolud_store,style:TextStyle(fontSize: 20),));

@@ -26,6 +26,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
             borderRadius: BorderRadius.circular(mq.height * .3),
             child: CachedNetworkImage(
               imageUrl: widget.user.image,
+              width: mq.height *.055,
               height: mq.height *.055,
               errorWidget: (context,url,error)=>
               CircleAvatar(child: Icon(CupertinoIcons.person),),

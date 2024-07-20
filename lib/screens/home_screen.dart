@@ -26,6 +26,13 @@ _signOut()async{
 class _HomeScreenState extends State<HomeScreen> {
 
   List<ChatUserModel> list = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    APIs.getSelfInfo();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -37,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(onPressed: (){}, 
           icon: Icon(Icons.search)),
           IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: list[0])));
+            Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: APIs.me)));
           }, 
           icon: Icon(Icons.more_vert)),
           IconButton(onPressed: (){
@@ -57,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 //fetching data from cloud firestore firebase.
       body: StreamBuilder(
-        stream: APIs.firestore.collection('users').snapshots(),
+        stream: APIs.getAllUser(),
         builder: (context, snapshot){
           switch(snapshot.connectionState){
             //if some time takes exectue this

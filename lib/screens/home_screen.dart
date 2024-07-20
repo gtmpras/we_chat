@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 //fetching data from cloud firestore firebase.
       body: StreamBuilder(
-        stream: APIs.firestore.collection('user').snapshots(),
+        stream: APIs.firestore.collection('users').snapshots(),
         builder: (context, snapshot){
           switch(snapshot.connectionState){
             //if some time takes exectue this

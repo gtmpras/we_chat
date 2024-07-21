@@ -91,7 +91,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         right: 0,
                         child: MaterialButton(
                           elevation: 1,
-                          onPressed: () {},
+                          onPressed: () {
+                            _showBottomSheet();
+                          },
                           shape: CircleBorder(),
                           color: Colors.white,
                           child: Icon(
@@ -165,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(mq.width * .5, mq.height * .05)),
                     onPressed: () {
-                      if(_formkey.currentState!.validate()){
+                      if (_formkey.currentState!.validate()) {
                         _formkey.currentState!.save();
                         APIs.updateUserInfo();
                         Dialogs.showSnackbar(context, profile_update);
@@ -181,5 +183,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        builder: (_) {
+          return ListView(
+            //only display the size of listView according to the contents in the list
+
+            shrinkWrap: true,
+            padding:
+                EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
+            children: [
+              //pick profile picture label
+              Text('Pick Profile Picture',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  )),
+SizedBox(height: mq.height* .01,),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+
+                  //pick profile picture from gallery
+                  ElevatedButton(onPressed: (){},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    fixedSize: Size(mq.width * .3, mq.height *.15),
+                    shape: CircleBorder(),
+                  ),
+                   child: Image.asset('images/gallery.png')),
+                   
+                   //pick profile picture from camera
+                  ElevatedButton(onPressed: (){},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    fixedSize: Size(mq.width * .3, mq.height *.15),
+                    shape: CircleBorder(),
+                  ),
+                   child: Image.asset('images/camera.png')),
+                ],)
+            ],
+          );
+        });
   }
 }

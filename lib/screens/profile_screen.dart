@@ -1,9 +1,11 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
@@ -26,6 +28,7 @@ _signOut() async {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formkey = GlobalKey<FormState>();
+  String? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +75,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Stack(
                     children: [
+                      //profile picture
+                      _image != null ?
+
+                      //local image
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(mq.height * .1),
+                        child: Image.file(
+                         File(_image!),
+                          width: mq.height * .2,
+                          height: mq.height * .2,
+                          fit: BoxFit.fill,
+                          
+                        ),
+                      )
+                      :
+                      //image from server
                       ClipRRect(
                         borderRadius: BorderRadius.circular(mq.height * .1),
                         child: CachedNetworkImage(
@@ -84,6 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ),
+
 
                       //edit image button
                       Positioned(
@@ -206,30 +226,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   )),
-SizedBox(height: mq.height* .01,),
+              SizedBox(
+                height: mq.height * .01,
+              ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
                   //pick profile picture from gallery
-                  ElevatedButton(onPressed: (){},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    fixedSize: Size(mq.width * .3, mq.height *.15),
-                    shape: CircleBorder(),
-                  ),
-                   child: Image.asset('images/gallery.png')),
-                   
-                   //pick profile picture from camera
-                  ElevatedButton(onPressed: (){},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    fixedSize: Size(mq.width * .3, mq.height *.15),
-                    shape: CircleBorder(),
-                  ),
-                   child: Image.asset('images/camera.png')),
-                ],)
+                  ElevatedButton(
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        //pickin image from gallery
+                        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                        if(image != null){
+                          log('Image Path: ${image.path}-- MimeType: ${image.mimeType}');
+                       //for hiding the bottom sheet
+                       setState(() {
+                         _image = image.path;
+                       });
+                        Navigator.pop(context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        fixedSize: Size(mq.width * .3, mq.height * .15),
+                        shape: CircleBorder(),
+                      ),
+                      child: Image.asset('images/gallery.png')),
+
+                  //pick profile picture from camera
+                  ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        fixedSize: Size(mq.width * .3, mq.height * .15),
+                        shape: CircleBorder(),
+                      ),
+                      child: Image.asset('images/camera.png')),
+                ],
+              )
             ],
           );
         });

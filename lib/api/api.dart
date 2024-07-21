@@ -62,4 +62,14 @@ class APIs {
     //for showing the id of remaining users instead of user's own's id
     return firestore.collection('users').where('id',isNotEqualTo: user.uid).snapshots();
   }
+  //for updating user information
+  static Future<void> updateUserInfo() async {
+     await firestore
+            .collection('users')
+            .doc(auth.currentUser!.uid)
+            .update({
+              'name':me.name,
+              'about':me.about
+              });
+  }
 }

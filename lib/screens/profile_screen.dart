@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                          File(_image!),
                           width: mq.height * .2,
                           height: mq.height * .2,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                           
                         ),
                       )
@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           imageUrl: widget.user.image,
                           width: mq.height * .2,
                           height: mq.height * .2,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                           errorWidget: (context, url, error) => CircleAvatar(
                             child: Icon(CupertinoIcons.person),
                           ),

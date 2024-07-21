@@ -21,10 +21,10 @@ class _SplashScreenState extends State<SplashScreen> {
       if (APIs.auth.currentUser != null) {
         print('\nUser: ${APIs.auth.currentUser}');
         print('\nUserAdditionalInfo: ${APIs.auth.currentUser}');
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => HomeScreen()));
       } else {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => LoginScreen()));
       }
     });

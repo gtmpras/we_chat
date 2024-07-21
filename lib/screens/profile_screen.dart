@@ -257,13 +257,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   //pick profile picture from camera
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        //pickin image from camera
+                        final XFile? image = await picker.pickImage(source: ImageSource.camera);
+                        if(image != null){
+                          log('Image Path: ${image.path}');
+                       //for hiding the bottom sheet
+                       setState(() {
+                         _image = image.path;
+                       });
+                        Navigator.pop(context);
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         fixedSize: Size(mq.width * .3, mq.height * .15),
                         shape: CircleBorder(),
                       ),
                       child: Image.asset('images/camera.png')),
+                
                 ],
               )
             ],

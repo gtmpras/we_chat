@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,15 +25,18 @@ class _ChatScreenState extends State<ChatScreen> {
           automaticallyImplyLeading: false,
           flexibleSpace: _appBar(),
         ),
+        body: Column(
+          children: [
+            _chatInput(),
+          ],
+        ),
       ),
     );
   }
 
   Widget _appBar() {
     return InkWell(
-      onTap: (){
-
-      },
+      onTap: () {},
       child: Row(
         children: [
           IconButton(
@@ -53,9 +58,9 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-      
-          SizedBox(width: 10,),
-      
+          SizedBox(
+            width: 10,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,9 +72,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: Colors.black54,
                     fontWeight: FontWeight.w500),
               ),
-              
-          SizedBox(height: 2,),
-      
+              SizedBox(
+                height: 2,
+              ),
               Text(
                 'Last seen not availabe',
                 style: TextStyle(
@@ -79,6 +84,75 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _chatInput() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: mq.height * .01, horizontal: mq.width * .023),
+      child: Row(
+        children: [
+          Expanded(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.emoji_emotions,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        hintText: 'Type Something...',
+                        hintStyle: TextStyle(color: Colors.blue),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.image,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.camera_alt_rounded,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  SizedBox(
+                    width: mq.width * .02,
+                  )
+                ],
+              ),
+            ),
+          ),
+          MaterialButton(
+            onPressed: () {},
+            padding: EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
+            minWidth: 0,
+            shape: CircleBorder(),
+            color: Colors.green,
+            child: Icon(
+              Icons.send,
+              color: Colors.white,
+              size: 26,
+            ),
+          )
         ],
       ),
     );

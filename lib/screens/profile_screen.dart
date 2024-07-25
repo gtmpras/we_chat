@@ -238,13 +238,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
                         //pickin image from gallery
-                        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                        final XFile? image = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
                         if(image != null){
                           log('Image Path: ${image.path}-- MimeType: ${image.mimeType}');
                        //for hiding the bottom sheet
                        setState(() {
                          _image = image.path;
                        });
+  APIs.updateProfilePicture(File(_image!));
+                       //for hiding bottom sheet
                         Navigator.pop(context);
                         }
                       },
@@ -267,6 +269,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                        setState(() {
                          _image = image.path;
                        });
+
+                       // for hiding bottom sheet
                         Navigator.pop(context);
                         }
                       },

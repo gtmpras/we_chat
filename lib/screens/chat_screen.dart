@@ -3,6 +3,8 @@ import 'dart:ffi';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:we_chat/api/api.dart';
+import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user_models.dart';
 
@@ -27,6 +29,47 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: Column(
           children: [
+            Expanded(
+              child: StreamBuilder(
+                stream: APIs.getAllUser(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    //if some time takes exectue this
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    //if data is loaded then execute this
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      // final data = snapshot.data?.docs;
+                      // _list = data
+                      //         ?.map((e) => ChatUserModel.fromJson(e.data()))
+                      //         .toList() ??
+                      //     [];
+                      final _list = [];
+                      
+                      if (_list.isNotEmpty) {
+                        return Container(
+                          child: ListView.builder(
+                              padding: EdgeInsets.only(top: mq.height * .01),
+                              itemCount: _list.length,
+                              physics: BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Text('Message: ${_list[index]}');
+                                }),
+                        );
+                      } else {
+                        return Center(
+                            child: Text(
+                          empty_user,
+                          style: TextStyle(fontSize: 20),
+                        ));
+                      }
+                  }
+                }),
+            ),
             _chatInput(),
           ],
         ),

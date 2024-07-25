@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user_models.dart';
+import 'package:we_chat/screens/chat_screen.dart';
 
 class ChatUserCard extends StatefulWidget {
   final ChatUserModel user;
@@ -21,7 +22,9 @@ class _ChatUserCardState extends State<ChatUserCard> {
       elevation: 2,
       child: InkWell(
         child: ListTile(
-          onTap: (){},
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_)=> ChatScreen(user: widget.user)));
+          },
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(mq.height * .3),
             child: CachedNetworkImage(

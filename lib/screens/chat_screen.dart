@@ -9,6 +9,8 @@ import 'package:we_chat/api/api.dart';
 import 'package:we_chat/consts/strings_const.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user_models.dart';
+import 'package:we_chat/models/message_model.dart';
+import 'package:we_chat/widgets/message_card.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUserModel user;
@@ -20,6 +22,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  //for storing all messages
+  List<MessageModel> _list = [];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,45 +38,63 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: StreamBuilder(
-                stream: APIs.getAllMessages(),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    //if some time takes exectue this
-                    case ConnectionState.waiting:
-                    case ConnectionState.none:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    //if data is loaded then execute this
-                    case ConnectionState.active:
-                    case ConnectionState.done:
-                       final data = snapshot.data?.docs;
-                       log('Data${jsonEncode(data![0].data())}');
-                      // _list = data
-                      //         ?.map((e) => ChatUserModel.fromJson(e.data()))
-                      //         .toList() ??
-                      //     [];
-                      final _list = [];
-                      
-                      if (_list.isNotEmpty) {
-                        return Container(
-                          child: ListView.builder(
-                              padding: EdgeInsets.only(top: mq.height * .01),
-                              itemCount: _list.length,
-                              physics: BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Text('Message: ${_list[index]}');
-                                }),
-                        );
-                      } else {
+                  stream: APIs.getAllMessages(),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      //if some time takes exectue this
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
                         return Center(
-                            child: Text(
-                          empty_user,
-                          style: TextStyle(fontSize: 20),
-                        ));
-                      }
-                  }
-                }),
+                          child: CircularProgressIndicator(),
+                        );
+                      //if data is loaded then execute this
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                        final data = snapshot.data?.docs;
+                        log('Data${jsonEncode(data![0].data())}');
+                        // _list = data
+                        //         ?.map((e) => ChatUserModel.fromJson(e.data()))
+                        //         .toList() ??
+                        //     [];
+                        // final _list = ['hi'];
+                        _list.clear();
+
+                        _list.add(MessageModel(
+                            msg: 'zyz',
+                            toId: 'Hii',
+                            read: '',
+                            type: Type.text,
+                            fromId: APIs.user.uid,
+                            sent: '12:00 AM'));
+
+                        _list.add(MessageModel(
+                            msg: 'Hello',
+                            toId: APIs.user.uid,
+                            read: '',
+                            type: Type.text,
+                            fromId: '',
+                            sent: '12:00 AM'));
+                        if (_list.isNotEmpty) {
+                          return Container(
+                            child: ListView.builder(
+                                padding: EdgeInsets.only(top: mq.height * .01),
+                                itemCount: _list.length,
+                                physics: BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return MessageCard(
+                                    message: _list[index],
+                                  );
+                                }),
+                          );
+                        } else {
+                          return Center(
+                              child: Text(
+                            empty_user,
+                            style: TextStyle(fontSize: 20),
+                          ));
+                        }
+                    }
+                  }),
             ),
             _chatInput(),
           ],

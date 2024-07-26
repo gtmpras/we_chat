@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -31,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: StreamBuilder(
-                stream: APIs.getAllUser(),
+                stream: APIs.getAllMessages(),
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     //if some time takes exectue this
@@ -43,7 +45,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     //if data is loaded then execute this
                     case ConnectionState.active:
                     case ConnectionState.done:
-                      // final data = snapshot.data?.docs;
+                       final data = snapshot.data?.docs;
+                       log('Data${jsonEncode(data![0].data())}');
                       // _list = data
                       //         ?.map((e) => ChatUserModel.fromJson(e.data()))
                       //         .toList() ??

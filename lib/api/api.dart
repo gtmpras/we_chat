@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:we_chat/models/chat_user_models.dart';
 import 'dart:developer';
 
+import 'package:we_chat/models/message_model.dart';
+
 class APIs {
   //for authentication
   static FirebaseAuth auth = FirebaseAuth.instance;
@@ -101,12 +103,26 @@ class APIs {
         .update({'image': me.image});
   }
 
+  //useful for getting conversation id
+  static String getConversationId(String id) => user.uid.hashCode <= id.hashCode
+      ? '${user.uid}_$id'
+      : '${id}_${user.uid}';
+
   /*************Chat Screen Related APIs*********** */
-    static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages() {
-    //for getting all messages of a specific conversation from firestore database
-    return firestore
-        .collection('messages')
-        .snapshots();
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(ChatUserModel user) {
+   
+   //for getting all messages of a specific conversation from firestore database
+    return firestore.collection('chats/${getConversationId(user.id)}/messages/').snapshots();
   }
 
+  //for sending message
+  static Future<void> sendMessage(ChatUserModel chatUser, String msg)async{
+//message sending time also used as ID
+    final time = DateTime.now().microsecondsSinceEpoch.toString();
+
+    //message to send
+    final MessageModel messagae = MessageModel(msg: msg, toId: user.uid, read: '', type: Type.text, fromId: user.uid, sent: time);
+    final ref = firestore.collection('chats/${getConversationId(chatUser.id)}/messages/');
+    ref.doc().set(messagae.toJson());
+  }
 }

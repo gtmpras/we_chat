@@ -25,6 +25,9 @@ class _ChatScreenState extends State<ChatScreen> {
   //for storing all messages
   List<MessageModel> _list = [];
 
+  //for handling message text changes
+  final _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,46 +37,31 @@ class _ChatScreenState extends State<ChatScreen> {
           automaticallyImplyLeading: false,
           flexibleSpace: _appBar(),
         ),
+        backgroundColor:Color.fromARGB(255, 255, 237, 234) ,
         body: Column(
           children: [
             Expanded(
               child: StreamBuilder(
-                  stream: APIs.getAllMessages(),
+                  stream: APIs.getAllMessages(
+                    widget.user
+                  ),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       //if some time takes exectue this
                       case ConnectionState.waiting:
                       case ConnectionState.none:
-                        return Center(
-                          child: CircularProgressIndicator(),
+                        return SizedBox(
+                        
                         );
                       //if data is loaded then execute this
                       case ConnectionState.active:
                       case ConnectionState.done:
                         final data = snapshot.data?.docs;
-                        log('Data${jsonEncode(data![0].data())}');
-                        // _list = data
-                        //         ?.map((e) => ChatUserModel.fromJson(e.data()))
-                        //         .toList() ??
-                        //     [];
-                        // final _list = ['hi'];
-                        _list.clear();
-
-                        _list.add(MessageModel(
-                            msg: 'zyz',
-                            toId: 'Hii',
-                            read: '',
-                            type: Type.text,
-                            fromId: APIs.user.uid,
-                            sent: '12:00 AM'));
-
-                        _list.add(MessageModel(
-                            msg: 'Hello',
-                            toId: APIs.user.uid,
-                            read: '',
-                            type: Type.text,
-                            fromId: '',
-                            sent: '12:00 AM'));
+                       _list = data
+                                ?.map((e) => MessageModel.fromJson(e.data()))
+                                .toList() ??
+                            [];
+                    
                         if (_list.isNotEmpty) {
                           return Container(
                             child: ListView.builder(
@@ -180,6 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Expanded(
                     child: TextField(
+                      controller: _textController,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: InputDecoration(
@@ -210,8 +199,14 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
+          //send message button
           MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              if(_textController.text.isNotEmpty){
+                APIs.sendMessage(widget.user, _textController.text);
+                _textController.text = '';
+              }
+            },
             padding: EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
             minWidth: 0,
             shape: CircleBorder(),

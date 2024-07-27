@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/message_model.dart';
+import 'package:we_chat/utils/my_date_util.dart';
 
 class MessageCard extends StatefulWidget {
   const MessageCard({super.key, required this.message});
@@ -22,6 +25,12 @@ class _MessageCardState extends State<MessageCard> {
 
 //sender of another user message
   Widget _blueMessage() {
+    //update last read message if sender and receiver are different
+    if(widget.message.read.isEmpty){
+      APIs.updateMessageReadStatus(widget.message);
+      log('message read updated');
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -52,9 +61,9 @@ class _MessageCardState extends State<MessageCard> {
             right: mq.width * .04,
           ),
           child: Text(
-            widget.message.sent,
-            style: TextStyle(fontSize: 13, color: Colors.black54),
-          ),
+              MyDateUtil.getFormattedTime(context: context, time: widget.message.sent),
+              style: TextStyle(fontSize: 13, color: Colors.black54),
+            ),
         ),
       ],
     );
@@ -74,11 +83,13 @@ class _MessageCardState extends State<MessageCard> {
               width: mq.width * .04,
             ),
             //for double tick blue icon for message read
-            Icon(
+            if(widget.message.read.isNotEmpty)
+             Icon(
               Icons.done_all_rounded,
               color: Colors.blue,
               size: 20,
             ),
+            
 
 //adding some space
             SizedBox(
@@ -87,7 +98,7 @@ class _MessageCardState extends State<MessageCard> {
 
             //read time
             Text(
-              widget.message.read + '12:00 AM',
+              MyDateUtil.getFormattedTime(context: context, time: widget.message.sent),
               style: TextStyle(fontSize: 13, color: Colors.black54),
             ),
           ],

@@ -109,20 +109,37 @@ class APIs {
       : '${id}_${user.uid}';
 
   /*************Chat Screen Related APIs*********** */
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(ChatUserModel user) {
-   
-   //for getting all messages of a specific conversation from firestore database
-    return firestore.collection('chats/${getConversationId(user.id)}/messages/').snapshots();
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+      ChatUserModel user) {
+    //for getting all messages of a specific conversation from firestore database
+    return firestore
+        .collection('chats/${getConversationId(user.id)}/messages/')
+        .snapshots();
   }
 
   //for sending message
-  static Future<void> sendMessage(ChatUserModel chatUser, String msg)async{
+  static Future<void> sendMessage(ChatUserModel chatUser, String msg) async {
 //message sending time also used as ID
     final time = DateTime.now().microsecondsSinceEpoch.toString();
 
     //message to send
-    final MessageModel messagae = MessageModel(msg: msg, toId: user.uid, read: '', type: Type.text, fromId: user.uid, sent: time);
-    final ref = firestore.collection('chats/${getConversationId(chatUser.id)}/messages/');
+    final MessageModel messagae = MessageModel(
+        msg: msg,
+        toId: user.uid,
+        read: '',
+        type: Type.text,
+        fromId: user.uid,
+        sent: time);
+    final ref = firestore
+        .collection('chats/${getConversationId(chatUser.id)}/messages/');
     ref.doc().set(messagae.toJson());
+  }
+
+  //update read status of message
+  static Future<void> updateMessageReadStatus(MessageModel message) async {
+    firestore
+        .collection('chats/${getConversationId(message.fromId)}/messages/')
+        .doc(message.sent)
+        .update({'read': DateTime.now().millisecondsSinceEpoch.toString()});
   }
 }

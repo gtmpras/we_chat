@@ -52,8 +52,16 @@ class _ChatUserCardState extends State<ChatUserCard> {
               CircleAvatar(child: Icon(CupertinoIcons.person),),
               ),
           ),
+          //user name
           title: Text(widget.user.name),
-          subtitle: Text(_message !=null? _message!.msg : widget.user.about,maxLines: 1,),
+          //last message
+          subtitle: Text(_message !=null?
+          _message!.type == Type.image? 'image':
+          _message!.msg : 
+
+          widget.user.about,
+
+          maxLines: 1,),
           //last message time
           trailing: _message==null 
           ? null

@@ -114,6 +114,7 @@ class APIs {
     //for getting all messages of a specific conversation from firestore database
     return firestore
         .collection('chats/${getConversationId(user.id)}/messages/')
+        .orderBy('sent',descending: true)
         .snapshots();
   }
 

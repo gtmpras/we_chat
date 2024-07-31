@@ -84,6 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             if (_list.isNotEmpty) {
                               return Container(
                                 child: ListView.builder(
+                                  reverse: true,
                                     padding: EdgeInsets.only(top: mq.height * .01),
                                     itemCount: _list.length,
                                     physics: BouncingScrollPhysics(),

@@ -30,7 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final _textController = TextEditingController();
 
 //for storing value of showing or hiding emoji
-  bool _showEmoji = false;
+  bool _showEmoji = false, _isUploading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +40,18 @@ class _ChatScreenState extends State<ChatScreen> {
         child: WillPopScope(
           //if emojis are shown and back button is pressed then hide emojis
           //or else simple close current screen on back button click
-          onWillPop: (){
-          if(_showEmoji){
-            setState(() {
-              _showEmoji = !_showEmoji;
+          onWillPop: () {
+            if (_showEmoji) {
+              setState(() {
+                _showEmoji = !_showEmoji;
+              });
 
-            });
-              
-          return Future.value(false);
-          }else{
-          return Future.value(true);
-          }
+              return Future.value(false);
+            } else {
+              return Future.value(true);
+            }
           },
-          
-          
+
           child: Scaffold(
             appBar: AppBar(
               //removing back button
@@ -77,15 +75,17 @@ class _ChatScreenState extends State<ChatScreen> {
                           case ConnectionState.done:
                             final data = snapshot.data?.docs;
                             _list = data
-                                    ?.map((e) => MessageModel.fromJson(e.data()))
+                                    ?.map(
+                                        (e) => MessageModel.fromJson(e.data()))
                                     .toList() ??
                                 [];
-                
+
                             if (_list.isNotEmpty) {
                               return Container(
                                 child: ListView.builder(
-                                  reverse: true,
-                                    padding: EdgeInsets.only(top: mq.height * .01),
+                                    reverse: true,
+                                    padding:
+                                        EdgeInsets.only(top: mq.height * .01),
                                     itemCount: _list.length,
                                     physics: BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
@@ -104,6 +104,18 @@ class _ChatScreenState extends State<ChatScreen> {
                         }
                       }),
                 ),
+
+                if (_isUploading)
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      )),
+
                 _chatInput(),
                 //show emojis on keyboard emoji button click and vice versa
                 if (_showEmoji)
@@ -214,12 +226,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Expanded(
                     child: TextField(
-                      onTap:(){
-                        if(_showEmoji)
-                        setState(() {
-                          _showEmoji =!_showEmoji;
-                        });
-                      } ,
+                      onTap: () {
+                        if (_showEmoji)
+                          setState(() {
+                            _showEmoji = !_showEmoji;
+                          });
+                      },
                       controller: _textController,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
@@ -231,25 +243,51 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    //picking images from gallery
+                    onPressed: () async {
+                      final ImagePicker picker = ImagePicker();
+                      //picking mulitple images
+                      final List<XFile> images =
+                          await picker.pickMultiImage(imageQuality: 70);
+
+                      //uploading and sending image one by one
+                      for (var i in images) {
+                        log('Image Path: ${i.path}');
+                        setState(() {
+                          _isUploading = true;
+                        });
+                        await APIs.sendChatImage(widget.user, File(i.path));
+                        setState(() {
+                          _isUploading =false;
+                        });
+                      }
+                    },
                     icon: Icon(
                       Icons.image,
                       color: Colors.blueAccent,
                     ),
                   ),
+
+                  //take image from camera button
                   IconButton(
                     onPressed: () async {
                       final ImagePicker picker = ImagePicker();
-                                           //pickin image from gallery
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.camera, imageQuality: 70);
-                        if (image != null) {
-                          log('Image Path: ${image.path}');
-                          //for hiding the bottom sheet
-                          
-                        await APIs.sendChatImage(widget.user,File(image.path));
-                        
-                    }
+                      //pickin image from gallery
+                      final XFile? image = await picker.pickImage(
+                          source: ImageSource.camera, imageQuality: 70);
+                      if (image != null) {
+                        log('Image Path: ${image.path}');
+
+                        setState(() {
+                          _isUploading = true;
+                        });
+                        //for hiding the bottom sheet
+
+                        await APIs.sendChatImage(widget.user, File(image.path));
+                        setState(() {
+                          _isUploading = false;
+                        });
+                      }
                     },
                     icon: Icon(
                       Icons.camera_alt_rounded,
@@ -267,7 +305,7 @@ class _ChatScreenState extends State<ChatScreen> {
           MaterialButton(
             onPressed: () {
               if (_textController.text.isNotEmpty) {
-                APIs.sendMessage(widget.user, _textController.text,Type.text);
+                APIs.sendMessage(widget.user, _textController.text, Type.text);
                 _textController.text = '';
               }
             },

@@ -30,8 +30,8 @@ class _ChatUserCardState extends State<ChatUserCard> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 2,
       child: InkWell(
-        child: StreamBuilder(stream: APIs.getLastMessage(widget.user), builder: (context, snapshot){
-
+        child: StreamBuilder(stream: APIs.getLastMessage(widget.user), 
+        builder: (context, snapshot){
           final data = snapshot.data?.docs;
           final _list = data?.map((e)=> MessageModel.fromJson(e.data())).toList()??[];
           if(_list.isNotEmpty){

@@ -46,22 +46,28 @@ class _HomeScreenState extends State<HomeScreen> {
     SystemChannels.lifecycle.setMessageHandler((messaage) {
       log('Message: $messaage');
 
-      if(messaage.toString().contains('resume')) APIs.updateActiveStatus(true);
-      if(messaage.toString().contains('pause')) APIs.updateActiveStatus(false);
-      
-      return Future.value(messaage);
-    });
+      if(APIs.auth.currentUser!= null){
+      if(messaage.toString().contains('resume'))
+       {APIs.updateActiveStatus(true);
 
-    //monitoring whether user closes an app or not?
-    SystemChannels.lifecycle.setMessageHandler((messaage) {
-      log('Message: $messaage');
-
-      if(messaage.toString().contains('resume')) APIs.updateActiveStatus(true);
-      if(messaage.toString().contains('pause')) APIs.updateActiveStatus(false);
-      
+      }
+      if(messaage.toString().contains('pause'))
+       {APIs.updateActiveStatus(false);}
+    }
       return Future.value(messaage);
     });
   }
+
+  //   //monitoring whether user closes an app or not?
+  //   SystemChannels.lifecycle.setMessageHandler((messaage) {
+  //     log('Message: $messaage');
+
+  //     if(messaage.toString().contains('resume')) APIs.updateActiveStatus(true);
+  //     if(messaage.toString().contains('pause')) APIs.updateActiveStatus(false);
+      
+  //     return Future.value(messaage);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -66,6 +66,8 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   width: mq.width,
                   height: mq.height * .03,
                 ),
+
+                //user profile picture
                 ClipRRect(
                   borderRadius: BorderRadius.circular(mq.height * .1),
                   child: CachedNetworkImage(

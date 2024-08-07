@@ -7,6 +7,7 @@ import 'package:we_chat/models/chat_user_models.dart';
 import 'package:we_chat/models/message_model.dart';
 import 'package:we_chat/screens/chat_screen.dart';
 import 'package:we_chat/utils/my_date_util.dart';
+import 'package:we_chat/widgets/dialogs/profile_dialog.dart';
 import 'package:we_chat/widgets/message_card.dart';
 
 class ChatUserCard extends StatefulWidget {
@@ -42,15 +43,20 @@ class _ChatUserCardState extends State<ChatUserCard> {
             Navigator.push(context, MaterialPageRoute(builder: (_)=> ChatScreen(user: widget.user)));
           },
           //user profile picture
-          leading: ClipRRect(
-            borderRadius: BorderRadius.circular(mq.height * .3),
-            child: CachedNetworkImage(
-              imageUrl: widget.user.image,
-              width: mq.height *.055,
-              height: mq.height *.055,
-              errorWidget: (context,url,error)=>
-              CircleAvatar(child: Icon(CupertinoIcons.person),),
-              ),
+          leading: InkWell(
+            onTap: (){
+              showDialog(context: context, builder: (_)=>ProfileDialog(user: widget.user));
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(mq.height * .3),
+              child: CachedNetworkImage(
+                imageUrl: widget.user.image,
+                width: mq.height *.055,
+                height: mq.height *.055,
+                errorWidget: (context,url,error)=>
+                CircleAvatar(child: Icon(CupertinoIcons.person),),
+                ),
+            ),
           ),
           //user name
           title: Text(widget.user.name),
